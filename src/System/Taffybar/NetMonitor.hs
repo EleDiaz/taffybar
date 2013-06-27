@@ -40,5 +40,7 @@ showInfo sample interval interface = do
     lastSample <- readIORef sample
     writeIORef sample thisSample
     let deltas = map fromIntegral $ zipWith (-) thisSample lastSample
-        [incoming, outgoing] = map (/(interval*1e3)) deltas
+        [incoming, outgoing] = case (map (/(interval*1e3)) deltas) of
+                                    [] -> [0,0]
+                                    x  -> x
     return $ printf "▼ %.2fkb/s ▲ %.2fkb/s" incoming outgoing
